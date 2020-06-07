@@ -11,6 +11,7 @@
     * (推薦使用)google colab版  
     * 將google_colab_104_1111人力銀行爬蟲.ipynb上傳 
     ![](./media/2020-05-14-16-00-10.png)
+    * 直接連結我的colab分享 https://colab.research.google.com/notebook#fileId=1KuaXUGgQIqJ7_ZN5V--zApt9ykOFuBk6&offline=true&sandboxMode=true
 
 ### 本機版本需求
 
