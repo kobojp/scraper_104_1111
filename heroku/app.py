@@ -21,7 +21,7 @@ def show_user_profile(find_key, select_salary, select_area, related_key, related
     thread = threading.Thread(target=email_find.email, args=(find_key, select_salary, select_area, related_key, related_content))   # 增加定義線程
     thread.start()  # 讓線程開始工作 
     # show the user profile for that user
-    return '爬取資料 %s %s %s %s ' % (find_key, select_salary, select_area, related_key, related_content)
+    return '爬取資料 %s %s %s %s %s ' % (find_key, select_salary, select_area, related_key, related_content)
 
 """
 爬取 工作關鍵字 find_key 

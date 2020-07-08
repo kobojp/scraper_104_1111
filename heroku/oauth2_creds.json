@@ -1,5 +1,5 @@
 {
-    "google_refresh_token": "1//0e0KJfyqY14g2CgYIARAAGA4SNwF-L9Ir0rbJBW_4diZ-aTO77SdzIRwz6dR02eXiFCbD4TNHSVEJX6TpY4ZuENBVdSVgpmziUR4",
-    "google_client_secret": "Ym2HL0OoFUP8iaGot8WJNesx",
-    "google_client_id": "591082768627-3ge3uo9k6c13jg9rd7v8mmcl98ie4521.apps.googleusercontent.com"
+    "google_refresh_token": "token",
+    "google_client_secret": "secret",
+    "google_client_id": "id"
 } 
