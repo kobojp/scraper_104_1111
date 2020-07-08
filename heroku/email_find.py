@@ -17,24 +17,24 @@ import glob
 import yagmail
 
 # , find_salary, find_area, related_key
-def email(find_key='金融', select_salary = 40000, select_area = list(['台北市', '新北市', '桃園市']), related_key = '分析'):
+def email(find_key='金融', select_salary = 40000, select_area = list(['台北市', '新北市', '桃園市']), related_key = '分析', related_content = '管理'):
     def get_todate():
         return date.today()
 
     def selenium_get_Code_104(url):
         #heroku selenium使用
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+        # chrome_options = webdriver.ChromeOptions()
+        # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        # chrome_options.add_argument("--headless")
+        # chrome_options.add_argument("--disable-dev-shm-usage")
+        # chrome_options.add_argument("--no-sandbox")
+        # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         
         #一般本地windows liunx使用
-        # chrome_options = Options() # 啟動無頭模式
-        # chrome_options.add_argument('--headless')  #規避google bug
-        # chrome_options.add_argument('--disable-gpu')
-        # driver = webdriver.Chrome(chrome_options=chrome_options)
+        chrome_options = Options() # 啟動無頭模式
+        chrome_options.add_argument('--headless')  #規避google bug
+        chrome_options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(chrome_options=chrome_options)
 
         driver.get(url)
         save = driver.page_source
@@ -192,18 +192,18 @@ def email(find_key='金融', select_salary = 40000, select_area = list(['台北�
 
     def selenium_get_Code_1111(url):
         #heroku selenium使用
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+        # chrome_options = webdriver.ChromeOptions()
+        # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        # chrome_options.add_argument("--headless")
+        # chrome_options.add_argument("--disable-dev-shm-usage")
+        # chrome_options.add_argument("--no-sandbox")
+        # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
         # 一般本地windows liunx使用
-        # chrome_options = Options() # 啟動無頭模式
-        # chrome_options.add_argument('--headless')  #規避google bug
-        # chrome_options.add_argument('--disable-gpu')
-        # driver = webdriver.Chrome(chrome_options=chrome_options)
+        chrome_options = Options() # 啟動無頭模式
+        chrome_options.add_argument('--headless')  #規避google bug
+        chrome_options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(chrome_options=chrome_options)
 
         driver.get(url)
         save = driver.page_source
@@ -347,10 +347,10 @@ def email(find_key='金融', select_salary = 40000, select_area = list(['台北�
     concat_104_1111.loc[concat_104_1111.薪資.str.contains('~'),'薪資'] = concat_104_1111.loc[concat_104_1111.薪資.str.contains('~'),'薪資'].str.split('~').str[0]
 
     #數字有"30,000"將,移除
-    concat_104_1111.loc[:,'薪資'] = concat_104_1111['薪資'].apply(lambda x:x.replace(',','')) 
+    concat_104_1111.loc[:,'薪資'] = concat_104_1111['薪資'].apply(lambda x:x.replace(',',''))
 
     # 薪資轉成int type
-    concat_104_1111.loc[:,'薪資'] = concat_104_1111['薪資'].astype(int)    
+    concat_104_1111.loc[:,'薪資'] = pd.to_numeric(concat_104_1111['薪資'])
 
     # 過濾
     #3萬以上
@@ -365,14 +365,15 @@ def email(find_key='金融', select_salary = 40000, select_area = list(['台北�
     mask3 = concat_104_1111.地區.str.contains(select_area[1])
     mask4 = concat_104_1111.地區.str.contains(select_area[2])
     mask5 = concat_104_1111.工作名稱.str.contains(related_key)
+    mask6 = concat_104_1111.工作內容.str.contains(related_content) #工作內容簡介也許會有相關的工作
 
     #搜尋 3萬以上 工作名稱有"證卷"關鍵字、區域 台北市 新北市
     # & = and , | = or   
-    concat_104_1111.loc[(mask1 & mask2 & mask5) | (mask1 & mask3 & mask5) | (mask1 & mask4 & mask5)].head()
+    concat_104_1111.loc[((mask2 | mask3 | mask4) & mask1 & mask5) | ((mask2 | mask3 | mask4) & mask1 & mask6)].head()
 
     #儲存成 Excel格式檔
     file_name = find_key #檔案名稱 依關鍵字取名
-    save_excel = concat_104_1111.loc[(mask1 & mask2 & mask5) | (mask1 & mask3 & mask5) | (mask1 & mask4 & mask5)]
+    save_excel = concat_104_1111.loc[((mask2 | mask3 | mask4) & mask1 & mask5) | ((mask2 | mask3 | mask4) & mask1 & mask6)]
     save_excel.to_excel('jobs_csv/{}.xlsx'.format(file_name), sheet_name='passengers', index=False)
     print('完成工作')
 
@@ -388,4 +389,4 @@ def email(find_key='金融', select_salary = 40000, select_area = list(['台北�
 
 if __name__ == "__main__":
     # email('分析師')
-    email(find_key='金融', select_salary = 40000, select_area = list(['台北市', '新北市', '桃園市']), related_key = '分析')
+    email(find_key='金融', select_salary = 40000, select_area = list(['台北市', '新北市', '桃園市']), related_key = '分析', related_content = '管理')
