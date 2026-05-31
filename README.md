@@ -2,6 +2,7 @@
 
 2020/6/7 更新：解決1111小改版後無法爬取
 2020/7/8 更新：新增工作內容搜尋相關字
+2026/05/31 新增：104 爬蟲，網頁版直接在colab執行，[JobInsight-104](https://github.com/kobojp/JobInsight-104)
 
 * 新增使用Heroku定時自動爬人力銀行儲存Excel檔並寄email到自己的信箱 
     - 你正在想找新工作可以使用Heroku自動爬蟲
